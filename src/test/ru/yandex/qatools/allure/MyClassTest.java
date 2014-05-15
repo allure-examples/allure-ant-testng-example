@@ -1,23 +1,19 @@
 package ru.yandex.qatools.allure;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 public class MyClassTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testExceptionIsThrown() {
-        final MyClass tester = new MyClass();
-        tester.multiply(1000, 5);
-    }
+    @Test()
+    public void testEmailGenerator() {
 
-    @Test
-    public void testMultiply() {
-        final MyClass tester = new MyClass();
-        assertEquals("10 x 5 must be 50", 50, tester.multiply(10, 5));
-    }
+        final MyClass obj = new MyClass();
+        final String email = obj.generate();
 
+        assertNotNull(email);
+        assertEquals(email, "feedback@yoursite.com");
+
+    }
+    
 } 

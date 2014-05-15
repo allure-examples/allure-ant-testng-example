@@ -1,4 +1,4 @@
-<project name="allure-junit-ant" default="run" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
+<project name="allure-testng-ant" default="run" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
     
     <!-- Project properties -->
     <property name="src" location="src"/>
@@ -56,24 +56,20 @@
     </target>
 
     <target name="test" depends="test-compile" description="Run the tests">
-        <junit haltonerror="false" haltonfailure="false" enableTestListenerEvents="true" dir="${build.report}" includeantruntime="true" clonevm="true">
-            <jvmarg value="-javaagent:${ivy.lib.dir}/aspectjweaver-${aspectj.version}.jar"/>
+        <taskdef name="testng" classname="org.testng.TestNGAntTask">
+            <classpath>
+                <path refid="lib.path.id"/>
+            </classpath>
+        </taskdef>
+        <testng workingDir="${build.report}" outputdir="${build.report}" listeners="ru.yandex.qatools.allure.testng.AllureTestListener">
+            <!--<jvmarg value="-javaagent:${ivy.lib.dir}/aspectjweaver-${aspectj.version}.jar"/>-->
             <classpath>
                 <pathelement location="${build.compile}"/>
                 <pathelement location="${build.test-compile}"/>
                 <path refid="lib.path.id"/>
             </classpath>
-
-            <formatter type="plain"/>
-            <formatter type="xml"/>
-            <formatter classname="ru.yandex.qatools.allure.junit.AllureRunListener"/>
-
-            <batchtest fork="yes" todir="${build.report}">
-                <fileset dir="${src.test}">
-                    <include name="**/*Test*.java"/>
-                </fileset>
-            </batchtest>
-        </junit>
+            <classfileset dir="${build.test-compile}" includes="**/*.class" />
+        </testng>
     </target>
 
     <target name="clean" description="Clean up">
