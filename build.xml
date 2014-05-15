@@ -1,0 +1,82 @@
+<project name="allure-junit-ant" default="run" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
+    
+    <!-- Project properties -->
+    <property name="src" location="src"/>
+    <property name="src.main" location="${src}/main"/>
+    <property name="src.test" location="${src}/test"/>
+    <property name="build" location="${basedir}/build"/>
+    <property name="build.compile" location="${build}/compile"/>
+    <property name="build.test-compile" location="${build}/test-compile"/>
+    <property name="build.report" location="${build}/report"/>
+
+    <!-- Ivy properties -->
+    <property name="ivy.install.version" value="2.3.0" />
+    <property name="ivy.jar.dir" value="${basedir}/ivy" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+    <property name = "ivy.lib.dir" value="${basedir}/lib" />
+
+    <path id="lib.path.id">
+      <fileset dir="${ivy.lib.dir}" />
+    </path>
+
+    <target name="install-ivy" depends="download-ivy" description="Install ivy">
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+
+    <target name="download-ivy" unless="skip.download">
+        <mkdir dir="${ivy.jar.dir}"/>
+        <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+
+    <target name="update" depends="install-ivy" description="Download project dependencies">
+        <ivy:retrieve/>
+    </target>
+
+    <target name="init" depends="update">
+        <tstamp/>
+        <mkdir dir="${build.compile}"/>
+        <mkdir dir="${build.test-compile}"/>
+        <mkdir dir="${build.report}"/>
+    </target>
+
+    <target name="compile" depends="init" description="Compile the source">
+        <javac srcdir="${src.main}" destdir="${build.compile}" classpathref="lib.path.id" includeantruntime="true"/>
+    </target>
+
+    <target name="test-compile" depends="compile" description="Compile tests source">
+        <javac srcdir="${src.test}" destdir="${build.test-compile}" classpathref="lib.path.id" includeantruntime="true">
+            <classpath>
+                <pathelement location="${build.compile}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="test" depends="test-compile" description="Run the tests">
+        <junit haltonerror="false" haltonfailure="false" enableTestListenerEvents="true" dir="${build.report}" includeantruntime="true" clonevm="true">
+            <classpath>
+                <pathelement location="${build.compile}"/>
+                <pathelement location="${build.test-compile}"/>
+                <path refid="lib.path.id"/>
+            </classpath>
+
+            <formatter type="plain"/>
+            <formatter type="xml"/>
+            <formatter classname="ru.yandex.qatools.allure.junit.AllureRunListener"/>
+
+            <batchtest fork="yes" todir="${build.report}">
+                <fileset dir="${src.test}">
+                    <include name="**/*Test*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="clean" description="Clean up">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="run" depends="clean,test" description="Do the entire lifecycle"/>
+</project>
