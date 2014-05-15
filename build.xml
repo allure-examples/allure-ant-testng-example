@@ -62,7 +62,7 @@
             </classpath>
         </taskdef>
         <testng workingDir="${build.report}" outputdir="${build.report}" listeners="ru.yandex.qatools.allure.testng.AllureTestListener">
-            <!--<jvmarg value="-javaagent:${ivy.lib.dir}/aspectjweaver-${aspectj.version}.jar"/>-->
+            <jvmarg value="-javaagent:${ivy.lib.dir}/aspectjweaver-${aspectj.version}.jar"/>
             <classpath>
                 <pathelement location="${build.compile}"/>
                 <pathelement location="${build.test-compile}"/>
