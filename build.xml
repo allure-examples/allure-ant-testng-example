@@ -8,6 +8,7 @@
     <property name="build.compile" location="${build}/compile"/>
     <property name="build.test-compile" location="${build}/test-compile"/>
     <property name="build.report" location="${build}/report"/>
+    <property name="aspectj.version" value="1.7.4"/>
 
     <!-- Ivy properties -->
     <property name="ivy.install.version" value="2.3.0" />
@@ -56,6 +57,7 @@
 
     <target name="test" depends="test-compile" description="Run the tests">
         <junit haltonerror="false" haltonfailure="false" enableTestListenerEvents="true" dir="${build.report}" includeantruntime="true" clonevm="true">
+            <jvmarg value="-javaagent:${ivy.lib.dir}/aspectjweaver-${aspectj.version}.jar"/>
             <classpath>
                 <pathelement location="${build.compile}"/>
                 <pathelement location="${build.test-compile}"/>
