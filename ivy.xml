@@ -1,7 +1,7 @@
 <ivy-module version="1.0">
     <info organisation="ru.yandex.qatools.allure" module="allure-testng-ant"/>
     <dependencies>
-        <dependency org="ru.yandex.qatools.allure" name="allure-testng-adaptor" rev="1.3.9"/>
+        <dependency org="ru.yandex.qatools.allure" name="allure-testng-adaptor" rev="1.4.0"/>
         <dependency org="org.aspectj" name="aspectjweaver" rev="1.7.4"/>
     </dependencies>
 </ivy-module>
