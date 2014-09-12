@@ -61,7 +61,7 @@
                 <path refid="lib.path.id"/>
             </classpath>
         </taskdef>
-        <testng workingDir="${build.report}" outputdir="${build.report}" listeners="ru.yandex.qatools.allure.testng.AllureTestListener">
+        <testng workingDir="${build.report}" outputdir="${build.report}">
             <jvmarg value="-javaagent:${ivy.lib.dir}/aspectjweaver-${aspectj.version}.jar"/>
             <classpath>
                 <pathelement location="${build.compile}"/>
